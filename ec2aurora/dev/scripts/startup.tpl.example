@@ -1,0 +1,45 @@
+#!/bin/bash
+
+echo updating...
+sudo yum update -y
+
+# Install postgresql11
+echo installing postgresql11...
+amazon-linux-extras install postgresql11 -y
+
+
+# Install web server
+echo installing httpd...
+amazon-linux-extras install httpd_modules -y
+
+# install java
+echo installing java...
+amazon-linux-extras install java-openjdk11 -y
+
+# install epel (extra packages for enterprise linux)
+echo installing epel...
+amazon-linux-extras install epel -y
+
+#install maven
+#wget https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+#sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+#yum install -y apache-maven
+echo installing maven...
+yum install -y maven
+
+# install node
+echo installing node...
+yum install -y nodejs npm
+
+# install php7.4
+echo installing php7.4...
+amazon-linux-extras install -y php7.4
+yum install php-mbstring -y
+
+echo DATABASE_HOST="${DATABASE_HOST}" >> /etc/environment
+echo DATABASE_PORT="${DATABASE_PORT}" >> /etc/environment
+echo DATABASE="MISSING">> /etc/environment
+echo DATABASE_USERNAME="${DATABASE_USERNAME}" >> /etc/environment
+echo DATABASE_PASSWORD="${DATABASE_PASSWORD}" >> /etc/environment
+
+

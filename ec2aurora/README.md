@@ -7,9 +7,9 @@
 - AWS Bucket for environment state
 - Available VPC within the deployment region
 
-```AWS Configuration``` 
-> AWS Configuration is set up to run from the commandline, and secret, secret-key, and default region must be set. If 
->using the default profile, no changes are required. If using a different profile, edit the aws provider in main.tf
+###AWS Configuration
+ AWS Configuration is set up to run from the commandline, and secret, secret-key, and default region must be set. If 
+using the default profile, no changes are required. If using a different profile, edit the aws provider in main.tf
 
 
 
@@ -39,4 +39,14 @@
 
 * ```ec2-instance``` _default=t2.micro_ sets the size of the ec2 instance
 
+## Config Files
+* ```dev/backend.config``` Contains the S3 Region, Bucket, and key for the state files
+* ```dev/scripts/startup.tpl``` Contains a template file for the ec2. This script is run at startup of the instance.
 
+# Run
+* Clone this repo, and navigate to the ec2aurora directory
+* Initialize the terraform IaaC ```terraform init -backend-config=dev/backend.config```
+* Apply the terraform ```terraform apply -var-file=_variables.tfvar```
+* In the ec2aurora directory a pem file will appear. This will allow you to remote into the EC2 instance via ssh
+  * The .pem file must have permissions changed ```chmod 400 <filename>.pem```
+   

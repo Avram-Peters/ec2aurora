@@ -21,11 +21,11 @@ data "aws_ami" "instance_ami" {
 data "template_file" "cloud-init" {
   template = file("./${var.env}/scripts/startup.tpl")
   vars = {
-    RANDOM_COFFEE_DATABASE_HOST = aws_rds_cluster.moogle-aurora-cluster.endpoint,
-    RANDOM_COFFEE_DATABASE_PORT = aws_rds_cluster.moogle-aurora-cluster.port,
-    RANDOM_COFFEE_DATABASE = "",
-    RANDOM_COFFEE_DATABASE_USERNAME = local.db-username
-    RANDOM_COFFEE_DATABASE_PASSWORD = random_password.aurora-password.result
+    DATABASE_HOST = aws_rds_cluster.moogle-aurora-cluster.endpoint,
+    DATABASE_PORT = aws_rds_cluster.moogle-aurora-cluster.port,
+    DATABASE = "",
+    DATABASE_USERNAME = local.db-username
+    DATABASE_PASSWORD = random_password.aurora-password.result
   }
 }
 

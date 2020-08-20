@@ -32,6 +32,6 @@ override.tf.json
 *.tpl
 *.tfvars
 *.config
-/dev/scripts/
+/dev/scripts/*
 *.pem
 

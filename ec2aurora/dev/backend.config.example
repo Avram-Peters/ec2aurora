@@ -1,0 +1,3 @@
+region = "<<bucket-region>>"
+bucket = "<<bucket-name>>"
+key = "<<object-key>>"
