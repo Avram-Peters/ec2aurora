@@ -1,0 +1,15 @@
+tags = {
+  "BusinessUnit": "",
+  "Owner": "",
+  "Capability": "PEI",
+  "Client": "",
+  "Purpose" : "<<APP NAME>>"
+}
+
+application_name = "<<APP NAME>>"
+
+vpc_cidr = "<<Available CIDR Block>>/24"
+env = "dev"
+
+aurora-instance-class      = "db.r5.large"
+debug = true

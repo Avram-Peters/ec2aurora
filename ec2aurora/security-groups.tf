@@ -1,6 +1,6 @@
 
   resource "aws_security_group" "database_sg" {
-    vpc_id = aws_vpc.mooglevpc.id
+    vpc_id = aws_vpc.eca_vpc.id
     name = "${var.application_name}-backend-sg"
     ingress {
       from_port = 5432
@@ -25,7 +25,7 @@
 
 
 resource "aws_security_group" "ec2_sg" {
-  vpc_id = aws_vpc.mooglevpc.id
+  vpc_id = aws_vpc.eca_vpc.id
   name = "${var.application_name}-frontend-sg"
   ingress {
     from_port = 22

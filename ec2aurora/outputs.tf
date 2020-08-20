@@ -21,5 +21,8 @@ output "ec2_internal_ip" {
   value = "${aws_instance.front-end-instance.*.private_ip}"
 }
 output "aurora_address" {
-  value = aws_rds_cluster.moogle-aurora-cluster.endpoint
+  value = aws_rds_cluster.eca-aurora-cluster.endpoint
+}
+output "get_cert" {
+  value = "aws secretsmanager get-secret-value --secret-id ${aws_secretsmanager_secret.ec2-secret.name}"
 }

@@ -22,7 +22,7 @@ variable "env" {
 
 locals {
 //  cidr_subnets = [for cidr_block in cidrsubnets(aws_vpc.mooglevpc.cidr_block, 1, 1) : cidrsubnets(cidr_block, 1, 0)]
-  cidr_subnets = cidrsubnets(aws_vpc.mooglevpc.cidr_block, 1, 1)
+  cidr_subnets = cidrsubnets(aws_vpc.eca_vpc.cidr_block, 1, 1)
   front_subnet = local.cidr_subnets[0]
   back_subnet = cidrsubnets(local.cidr_subnets[1], 1, 1)
   db-username = "${var.env}${var.application_name}uname"

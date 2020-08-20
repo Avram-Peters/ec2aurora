@@ -21,8 +21,8 @@ data "aws_ami" "instance_ami" {
 data "template_file" "cloud-init" {
   template = file("./${var.env}/scripts/startup.tpl")
   vars = {
-    DATABASE_HOST = aws_rds_cluster.moogle-aurora-cluster.endpoint,
-    DATABASE_PORT = aws_rds_cluster.moogle-aurora-cluster.port,
+    DATABASE_HOST = aws_rds_cluster.eca-aurora-cluster.endpoint,
+    DATABASE_PORT = aws_rds_cluster.eca-aurora-cluster.port,
     DATABASE = "",
     DATABASE_USERNAME = local.db-username
     DATABASE_PASSWORD = random_password.aurora-password.result
@@ -36,7 +36,7 @@ data "template_file" "cloud-init" {
 resource "aws_instance" "front-end-instance" {
 //  count = "${local.pet_enabled ? 1 : 0}"
   ami = data.aws_ami.instance_ami.id
-  subnet_id = aws_subnet.mooglesubnet-front.id
+  subnet_id = aws_subnet.ecasubnet-front.id
   instance_type = var.ec2-instance
   associate_public_ip_address = true
   vpc_security_group_ids = [
@@ -47,7 +47,7 @@ resource "aws_instance" "front-end-instance" {
   ]
 //  See permission.tf
   iam_instance_profile = "${var.application_name}-instance-profile"
-  key_name = "${aws_key_pair.emc_ec2_ssh_key_pair.key_name}"
+  key_name = aws_key_pair.emc_ec2_ssh_key_pair.key_name
   root_block_device {
     volume_size = 10
   }
@@ -61,7 +61,7 @@ resource "aws_instance" "front-end-instance" {
 //extra disk space if required
 resource "aws_ebs_volume" "ebs_volume_for_ec2" {
 //  count = "${local.pet_enabled ? 1 : 0}"
-  availability_zone = aws_subnet.mooglesubnet-front.availability_zone
+  availability_zone = aws_subnet.ecasubnet-front.availability_zone
   size = 30
   type = "gp2"
   encrypted = true
@@ -70,14 +70,33 @@ resource "aws_ebs_volume" "ebs_volume_for_ec2" {
 resource "aws_volume_attachment" "ec2_ebs_attachment" {
 //  count = "${local.pet_enabled ? 1 : 0}"
   device_name = "/dev/sdh"
-  instance_id = "${aws_instance.front-end-instance.id}"
-  volume_id = "${aws_ebs_volume.ebs_volume_for_ec2.id}"
+  instance_id = aws_instance.front-end-instance.id
+  volume_id = aws_ebs_volume.ebs_volume_for_ec2.id
   force_detach = true
 
 }
 
 
+# Export the pem file to a secret, stored in secret-manager
+resource "aws_secretsmanager_secret" "ec2-secret" {
+  name = "${var.env}-${var.application_name}-ec2-certificate"
+  description = "Private Key for EC2 Instance"
+  recovery_window_in_days = local.secrets_ttl
+  tags = merge(
+      var.tags,
+      {"Name": "${var.application_name}-pem"}
+    )
+}
 
+resource "aws_secretsmanager_secret_version" "ec2-secret-value" {
+  secret_id = aws_secretsmanager_secret.ec2-secret.id
+  secret_string = jsonencode({
+    key1 = aws_key_pair.emc_ec2_ssh_key_pair.key_name
+    key2 = tls_private_key.emc_ec2_ssh_key.private_key_pem
+  })
+  version_stages = ["AWSCURRENT"]
+
+}
 
 
 resource "local_file" "pem_key" {
