@@ -64,3 +64,8 @@ variable "ec2-instance" {
   default = "t2.micro"
 }
 
+variable "ssh_access" {
+  type = list(string)
+  description = "IP Addresses whitelisted for SSH access to EC2"
+}
+

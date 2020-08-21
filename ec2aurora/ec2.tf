@@ -41,6 +41,7 @@ resource "aws_instance" "front-end-instance" {
   associate_public_ip_address = true
   vpc_security_group_ids = [
     aws_security_group.ec2_sg.id
+
 //    "sg-d0b626a1", # ingress - internal - ssh
 //    "sg-25bb2b54", # egress - external - HTTP (yum)
 //    "sg-13b92962"  # egress - external - HTTPS

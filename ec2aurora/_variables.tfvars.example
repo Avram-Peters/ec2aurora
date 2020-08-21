@@ -13,3 +13,4 @@ env = "dev"
 
 aurora-instance-class      = "db.r5.large"
 debug = true
+ssh_access = []
